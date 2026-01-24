@@ -15,13 +15,12 @@
         
         body { 
             font-family: 'Poppins', sans-serif; 
-            /* Multi-color mixed animated background */
             background: linear-gradient(135deg, #ff4d4d, #f9d423, #4facfe, #ff00cc, #33d9b2);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             background-attachment: fixed;
             color: #1e293b; 
-            user-select: none; /* Prevents text selection for security */
+            user-select: none; 
             overflow-x: hidden;
         }
 
@@ -51,7 +50,6 @@
             box-shadow: 0 4px 20px -5px rgba(0,0,0,0.1);
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
         ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
@@ -59,28 +57,16 @@
 
     <!-- Anti-Inspect Scripts -->
     <script>
-        // Disable Right Click
         document.addEventListener('contextmenu', event => event.preventDefault());
-
-        // Disable keyboard shortcuts
         document.onkeydown = function (e) {
-            // Disable F12
             if (e.keyCode == 123) return false;
-            // Disable Ctrl+Shift+I (Inspect), J (Console), C (Selector)
             if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
-            // Disable Ctrl+U (Source)
             if (e.ctrlKey && e.keyCode == 85) return false;
         };
-
-        // Debugger loop
-        setInterval(function() {
-            debugger;
-        }, 500);
     </script>
 </head>
 <body class="min-h-screen pb-20">
 
-    <!-- Header Section -->
     <header class="py-16 px-4 text-center">
         <h1 class="text-5xl md:text-7xl font-extrabold header-text mb-4 tracking-tight">Quantum Horizons</h1>
         <p class="text-white text-xl font-medium opacity-90">Insights into the Future of Computation</p>
@@ -108,7 +94,6 @@
             <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover" alt="Quantum Processor">
         </div>
 
-        <!-- Content Article -->
         <article class="glass rounded-[2.5rem] p-8 md:p-14 mb-12">
             <h2 class="text-4xl font-bold mb-8 text-slate-900">The Subatomic Frontier</h2>
             <div class="space-y-6 text-slate-700 text-lg leading-relaxed">
@@ -144,7 +129,6 @@
                 </div>
             </div>
             
-            <!-- Comment Form -->
             <div class="mb-12 bg-slate-50 p-6 rounded-3xl border border-slate-200">
                 <div class="flex items-start gap-4 mb-4">
                     <div class="w-10 h-10 bg-slate-200 rounded-full flex-shrink-0 flex items-center justify-center text-slate-500">
@@ -157,12 +141,11 @@
                 </div>
             </div>
 
-            <!-- Comments List -->
             <div id="comments-list" class="space-y-8 max-h-[600px] overflow-y-auto pr-2">
                 <div class="flex justify-center py-10" id="feed-status">
                     <div class="flex flex-col items-center gap-4">
                         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="text-slate-400 font-medium">Synchronizing with live feed...</span>
+                        <span class="text-slate-400 font-medium" id="status-text">Synchronizing with live feed...</span>
                     </div>
                 </div>
             </div>
@@ -174,7 +157,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Your Hardcoded Firebase Configuration
         const githubFirebaseConfig = {
             apiKey: "AIzaSyDKtkNGcBLjWBXlzIT71ji8y8d2JXcRjBU",
             authDomain: "myquantumpost.firebaseapp.com",
@@ -186,9 +168,17 @@
         };
 
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : githubFirebaseConfig;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'quantum-raval-v-final';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'quantum-raval-v-live';
 
         let app, auth, db;
+
+        const showStatusError = (msg) => {
+            const statusText = document.getElementById('status-text');
+            if (statusText) {
+                statusText.innerText = msg;
+                statusText.classList.add('text-red-500');
+            }
+        };
 
         const initFirebase = async () => {
             try {
@@ -204,21 +194,13 @@
                 return true;
             } catch (error) {
                 console.error("Firebase Init Error:", error);
-                const statusEl = document.getElementById('feed-status');
-                if (statusEl) {
-                    statusEl.innerHTML = `
-                        <div class="text-center p-6 bg-red-50 text-red-600 rounded-2xl">
-                            <p class="font-bold">Database Error</p>
-                            <p class="text-sm">Please check your Firebase configuration and Anonymous Login settings.</p>
-                        </div>`;
-                }
+                showStatusError("Auth Error: Enable Anonymous Login in Firebase Console.");
                 return false;
             }
         };
 
         const setupComments = (user) => {
             if (!user) return;
-            // Rule 1: Use specific artifacts path
             const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
             
             onSnapshot(commentsRef, (snapshot) => {
@@ -229,8 +211,6 @@
                 
                 const docs = [];
                 snapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
-                
-                // Rule 2: Sort in memory
                 docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 if (docs.length === 0) {
@@ -258,7 +238,10 @@
                         </div>`;
                     list.appendChild(div);
                 });
-            }, (error) => console.error(error));
+            }, (error) => {
+                console.error("Firestore Error:", error);
+                showStatusError("Database Error: Check your Firestore Rules.");
+            });
 
             document.getElementById('submit-comment').onclick = async () => {
                 const input = document.getElementById('comment-input');
