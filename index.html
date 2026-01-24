@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Computing by Prof. Amit Raval</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js" type="module"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            /* Multi-color mixed background: Red, Yellow, Blue, Pink, Green */
+            background: linear-gradient(135deg, #ff4d4d, #f9d423, #4facfe, #ff00cc, #33d9b2);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            background-attachment: fixed;
+            color: #1e293b; 
+            user-select: none; /* Prevents text selection for security */
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15); 
+        }
+        
+        .header-text {
+            color: white;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
+        .comment-card {
+            transition: all 0.2s ease;
+        }
+        .comment-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+    </style>
+
+    <!-- Anti-Inspect Script -->
+    <script>
+        // Disable Right Click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable keyboard shortcuts
+        document.onkeydown = function (e) {
+            // Disable F12
+            if (e.keyCode == 123) return false;
+            // Disable Ctrl+Shift+I (Inspect), J (Console), C (Selector), U (Source)
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
+            if (e.ctrlKey && e.keyCode == 85) return false;
+        };
+
+        // Debugger trap to discourage devtools
+        setInterval(function() {
+            debugger;
+        }, 500);
+    </script>
+</head>
+<body class="min-h-screen pb-20">
+
+    <!-- Header -->
+    <header class="py-16 px-4 text-center">
+        <h1 class="text-5xl md:text-7xl font-extrabold header-text mb-4 tracking-tight">Quantum Horizons</h1>
+        <p class="text-white text-xl font-medium opacity-90">An Open Forum for Advanced Computation</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4">
+        
+        <!-- Professor Profile Section -->
+        <div class="glass rounded-3xl p-8 mb-8 flex flex-col md:flex-row items-center gap-8 border-l-8 border-blue-600">
+            <div class="relative">
+                <div class="w-28 h-28 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-4xl font-bold shadow-2xl rotate-3">
+                    AR
+                </div>
+                <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 border-4 border-white rounded-full"></div>
+            </div>
+            <div>
+                <h2 class="text-3xl font-bold text-slate-900">Professor Amit Raval</h2>
+                <p class="text-blue-600 font-semibold text-lg mb-3">Lead Researcher & Technology Visionary</p>
+                <p class="text-slate-600 leading-relaxed italic">"The quantum world doesn't play by our rules. Understanding it requires us to rethink everything we know about reality."</p>
+            </div>
+        </div>
+
+        <!-- Professional Image -->
+        <div class="w-full h-80 md:h-[450px] bg-slate-200 rounded-[2.5rem] mb-12 overflow-hidden shadow-2xl border-4 border-white/50">
+            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover" alt="Quantum Processor">
+        </div>
+
+        <!-- Content Section -->
+        <article class="glass rounded-[2.5rem] p-8 md:p-14 mb-12">
+            <h2 class="text-4xl font-bold mb-8 text-slate-900">The Subatomic Frontier</h2>
+            <div class="space-y-6 text-slate-700 text-lg leading-relaxed">
+                <p>
+                    As noted by <strong>Professor Amit Raval</strong>, classical computing is hitting a physical wall. We are shrinking transistors to the size of atoms, where quantum tunneling begins to interfere with logic.
+                </p>
+                <p>To move forward, we must embrace the counter-intuitive nature of quantum physics.</p>
+                
+                <div class="grid md:grid-cols-2 gap-6 py-6">
+                    <div class="p-8 bg-blue-50/50 rounded-3xl border border-blue-100 hover:bg-blue-50 transition-colors">
+                        <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-xl mb-2">Superposition</h3>
+                        <p class="text-sm leading-normal text-slate-500">Processing infinite variables simultaneously rather than sequentially.</p>
+                    </div>
+                    <div class="p-8 bg-purple-50/50 rounded-3xl border border-purple-100 hover:bg-purple-50 transition-colors">
+                        <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center text-white mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-xl mb-2">Entanglement</h3>
+                        <p class="text-sm leading-normal text-slate-500">Non-local correlations that allow for unbreakable cryptographic security.</p>
+                    </div>
+                </div>
+
+                <div class="p-8 bg-slate-900 rounded-3xl text-white shadow-xl relative overflow-hidden group">
+                    <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl group-hover:bg-blue-500/40 transition-all"></div>
+                    <h4 class="text-blue-400 font-bold uppercase tracking-widest text-sm mb-3">Key Perspective</h4>
+                    <p class="text-xl italic font-light">"Quantum supremacy isn't just a milestone; it's the moment we start speaking the language of the universe."</p>
+                    <p class="mt-4 text-right font-bold text-blue-400">— Professor Amit Raval</p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Live Discussion Feed -->
+        <section class="glass rounded-[2.5rem] p-8 md:p-14 mb-10">
+            <div class="flex items-center justify-between mb-10">
+                <h2 class="text-3xl font-bold text-slate-900">Discussion Feed</h2>
+                <div class="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-1.5 rounded-full text-xs font-bold">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    LIVE NOW
+                </div>
+            </div>
+            
+            <!-- Comment Input -->
+            <div class="mb-12 bg-slate-50 p-6 rounded-3xl border border-slate-200">
+                <div class="flex items-start gap-4 mb-4">
+                    <div class="w-10 h-10 bg-slate-200 rounded-full flex-shrink-0 flex items-center justify-center text-slate-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </div>
+                    <textarea id="comment-input" class="w-full bg-transparent border-none focus:ring-0 text-slate-800 placeholder:text-slate-400 text-lg resize-none min-h-[80px]" placeholder="Ask Professor Raval a question..."></textarea>
+                </div>
+                <div class="flex justify-end pt-4 border-t border-slate-200">
+                    <button id="submit-comment" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-blue-200 active:scale-95">Post Comment</button>
+                </div>
+            </div>
+
+            <!-- List -->
+            <div id="comments-list" class="space-y-8 max-h-[600px] overflow-y-auto pr-2">
+                <div class="flex justify-center py-10">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                        <span class="text-slate-400 font-medium">Synchronizing with live feed...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'quantum-raval-vfinal';
+
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+
+        const setupComments = (user) => {
+            if (!user) return;
+            const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
+            
+            onSnapshot(commentsRef, (snapshot) => {
+                const list = document.getElementById('comments-list');
+                list.innerHTML = '';
+                
+                const docs = [];
+                snapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
+                docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                if (docs.length === 0) {
+                    list.innerHTML = '<div class="text-center py-10 text-slate-400">No discussions started yet.</div>';
+                    return;
+                }
+
+                docs.forEach(data => {
+                    const initials = data.userId.substring(0, 2).toUpperCase();
+                    const colorIndex = data.userId.charCodeAt(0) % 5;
+                    const colors = ['bg-blue-500', 'bg-red-500', 'bg-purple-500', 'bg-green-500', 'bg-yellow-500'];
+                    const bgColor = colors[colorIndex];
+
+                    const div = document.createElement('div');
+                    div.className = 'comment-card p-6 rounded-3xl bg-white border border-slate-100 flex gap-4';
+                    div.innerHTML = `
+                        <div class="w-12 h-12 ${bgColor} rounded-2xl flex-shrink-0 flex items-center justify-center text-white font-bold shadow-md">${initials}</div>
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-center mb-1">
+                                <h4 class="font-bold text-slate-800">User_${data.userId.substring(0, 4)}</h4>
+                                <span class="text-[11px] font-bold text-slate-400 tracking-widest uppercase">${data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}</span>
+                            </div>
+                            <p class="text-slate-600 mb-4">${escapeHtml(data.text)}</p>
+                            <div class="flex gap-4 opacity-50"><span class="text-xs font-bold">Reply</span><span class="text-xs font-bold">Helpful</span></div>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            }, (error) => console.error(error));
+
+            document.getElementById('submit-comment').onclick = async () => {
+                const input = document.getElementById('comment-input');
+                const text = input.value.trim();
+                if (text) {
+                    try {
+                        await addDoc(commentsRef, { text, userId: user.uid, timestamp: serverTimestamp() });
+                        input.value = '';
+                    } catch (e) { console.error(e); }
+                }
+            };
+        };
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        window.onload = async () => {
+            await initAuth();
+            onAuthStateChanged(auth, (user) => { if (user) setupComments(user); });
+        };
+    </script>
+</body>
+</html>
