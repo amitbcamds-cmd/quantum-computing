@@ -42,20 +42,19 @@
             text-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
 
-        .comment-card {
-            transition: all 0.2s ease;
-        }
-        .comment-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.1);
-        }
+        .comment-card { transition: all 0.2s ease; }
+        .reply-container { border-left: 3px solid rgba(59, 130, 246, 0.3); margin-left: 1rem; padding-left: 1rem; }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
         ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+
+        .admin-only { display: none !important; }
+        body.admin-mode .admin-only { display: inline-block !important; }
+        
+        #admin-modal { transition: opacity 0.3s ease; }
     </style>
 
-    <!-- Anti-Inspect Scripts -->
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function (e) {
@@ -74,22 +73,19 @@
 
     <main class="max-w-4xl mx-auto px-4">
         
-        <!-- Professor Amit Raval Profile -->
+        <!-- Professor Profile -->
         <div class="glass rounded-3xl p-8 mb-8 flex flex-col md:flex-row items-center gap-8 border-l-8 border-blue-600">
             <div class="relative">
-                <div class="w-28 h-28 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-4xl font-bold shadow-2xl rotate-3">
-                    AR
-                </div>
-                <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 border-4 border-white rounded-full"></div>
+                <div class="w-28 h-28 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-4xl font-bold shadow-2xl rotate-3">AR</div>
             </div>
             <div>
                 <h2 class="text-3xl font-bold text-slate-900">Professor Amit Raval</h2>
                 <p class="text-blue-600 font-semibold text-lg mb-3">Lead Researcher & Technology Visionary</p>
-                <p class="text-slate-600 leading-relaxed italic">"The quantum world doesn't play by our rules. Understanding it requires us to rethink everything we know about reality."</p>
+                <p class="text-slate-600 italic">"Quantum mechanics isn't just a theory; it's the architecture of the future."</p>
             </div>
         </div>
 
-        <!-- Fixed High Quality Image -->
+        <!-- Professional Fixed Image -->
         <div class="w-full h-80 md:h-[450px] bg-slate-200 rounded-[2.5rem] mb-12 overflow-hidden shadow-2xl border-4 border-white/50">
             <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover" alt="Quantum Processor">
         </div>
@@ -97,30 +93,17 @@
         <article class="glass rounded-[2.5rem] p-8 md:p-14 mb-12">
             <h2 class="text-4xl font-bold mb-8 text-slate-900">The Subatomic Frontier</h2>
             <div class="space-y-6 text-slate-700 text-lg leading-relaxed">
-                <p>
-                    As explained by <strong>Professor Amit Raval</strong>, classical computing is hitting a physical wall. We are shrinking transistors to the size of atoms, where quantum tunneling begins to interfere with logic.
-                </p>
+                <p>As explained by <strong>Professor Amit Raval</strong>, classical computing limits are being shattered. With Quantum Computing, we process data using Qubits that exist in multiple states simultaneously.</p>
                 
-                <div class="grid md:grid-cols-2 gap-6 py-6">
-                    <div class="p-8 bg-blue-50/50 rounded-3xl border border-blue-100">
-                        <h3 class="font-bold text-slate-900 text-xl mb-2">Superposition</h3>
-                        <p class="text-sm text-slate-500">Processing infinite variables simultaneously rather than sequentially.</p>
-                    </div>
-                    <div class="p-8 bg-purple-50/50 rounded-3xl border border-purple-100">
-                        <h3 class="font-bold text-slate-900 text-xl mb-2">Entanglement</h3>
-                        <p class="text-sm text-slate-500">Instant correlation between particles, identified by Prof. Raval as the key to secure communication.</p>
-                    </div>
-                </div>
-
-                <div class="p-8 bg-slate-900 rounded-3xl text-white shadow-xl relative overflow-hidden group">
-                    <p class="text-xl italic font-light">"Quantum supremacy isn't just a milestone; it's the moment we start speaking the language of the universe."</p>
+                <div class="p-8 bg-slate-900 rounded-3xl text-white shadow-xl">
+                    <p class="text-xl italic">"We are not just building faster machines; we are building a new reality."</p>
                     <p class="mt-4 text-right font-bold text-blue-400">— Professor Amit Raval</p>
                 </div>
             </div>
         </article>
 
         <!-- Live Discussion Feed -->
-        <section class="glass rounded-[2.5rem] p-8 md:p-14 mb-10">
+        <section class="glass rounded-[2.5rem] p-8 md:p-14">
             <div class="flex items-center justify-between mb-10">
                 <h2 class="text-3xl font-bold text-slate-900">Discussion Feed</h2>
                 <div class="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-1.5 rounded-full text-xs font-bold">
@@ -130,34 +113,50 @@
             </div>
             
             <div class="mb-12 bg-slate-50 p-6 rounded-3xl border border-slate-200">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-10 h-10 bg-slate-200 rounded-full flex-shrink-0 flex items-center justify-center text-slate-500">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                    </div>
-                    <textarea id="comment-input" class="w-full bg-transparent border-none focus:ring-0 text-slate-800 placeholder:text-slate-400 text-lg resize-none min-h-[80px]" placeholder="Ask Professor Raval a question..."></textarea>
-                </div>
+                <textarea id="comment-input" class="w-full bg-transparent border-none focus:ring-0 text-slate-800 placeholder:text-slate-400 text-lg resize-none min-h-[80px]" placeholder="Share your thoughts with the community..."></textarea>
                 <div class="flex justify-end pt-4 border-t border-slate-200">
-                    <button id="submit-comment" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-blue-200 active:scale-95">Post Comment</button>
+                    <button id="submit-comment" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl transition-all shadow-lg active:scale-95">Post Comment</button>
                 </div>
             </div>
 
-            <div id="comments-list" class="space-y-8 max-h-[600px] overflow-y-auto pr-2">
-                <div class="flex justify-center py-10" id="feed-status">
-                    <div class="flex flex-col items-center gap-4">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="text-slate-400 font-medium" id="status-text">Synchronizing with live feed...</span>
-                    </div>
-                </div>
+            <div id="comments-list" class="space-y-6">
+                <div class="text-center py-10 text-slate-400" id="feed-status">Synchronizing live feed...</div>
             </div>
         </section>
+
+        <!-- Admin Access -->
+        <div class="mt-12 text-center opacity-30 hover:opacity-100 transition-opacity">
+            <button id="open-admin-modal" class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mx-auto px-4 py-2 rounded-full hover:bg-white/10">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                Admin Access
+            </button>
+        </div>
     </main>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden opacity-0 pointer-events-none">
+        <div class="glass max-w-sm w-full p-8 rounded-3xl mx-4">
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Admin Login</h3>
+            <p class="text-sm text-slate-500 mb-6">Enter the administrator password to enable moderation features.</p>
+            <input type="password" id="admin-pass-input" class="w-full p-3 bg-slate-100 rounded-xl mb-4 border-none outline-none focus:ring-2 focus:ring-blue-500" placeholder="Password">
+            <div id="admin-error" class="text-red-500 text-xs mb-4 hidden font-bold">Incorrect password.</div>
+            <div class="flex gap-3">
+                <button id="close-admin-modal" class="flex-1 py-3 text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition-colors">Cancel</button>
+                <button id="verify-admin-btn" class="flex-1 py-3 bg-blue-600 text-white text-sm font-bold rounded-xl shadow-lg hover:bg-blue-700">Verify</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[60] px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl transition-all opacity-0 translate-y-10 pointer-events-none"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const githubFirebaseConfig = {
+        // Your Hardcoded Firebase Configuration
+        const firebaseConfig = {
             apiKey: "AIzaSyDKtkNGcBLjWBXlzIT71ji8y8d2JXcRjBU",
             authDomain: "myquantumpost.firebaseapp.com",
             projectId: "myquantumpost",
@@ -167,92 +166,219 @@
             measurementId: "G-6KD2X66ZL5"
         };
 
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : githubFirebaseConfig;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'quantum-raval-v-live';
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // CONSISTENT APP ID - DO NOT CHANGE THIS TO PERSIST COMMENTS
+        const appId = 'quantum-raval-v-pro-fix';
 
-        let app, auth, db;
+        let currentUser = null;
+        let isAdmin = false;
 
-        const showStatusError = (msg) => {
-            const statusText = document.getElementById('status-text');
-            if (statusText) {
-                statusText.innerText = msg;
-                statusText.classList.add('text-red-500');
-            }
+        const showToast = (msg, color = 'bg-slate-900') => {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 z-[60] px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl transition-all opacity-100 translate-y-0 ${color}`;
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10');
+            }, 3000);
         };
 
-        const initFirebase = async () => {
-            try {
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
+        const init = async () => {
+            await signInAnonymously(auth);
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    setupComments();
                 }
-                return true;
-            } catch (error) {
-                console.error("Firebase Init Error:", error);
-                showStatusError("Auth Error: Enable Anonymous Login in Firebase Console.");
-                return false;
-            }
+            });
         };
 
-        const setupComments = (user) => {
-            if (!user) return;
+        const setupComments = () => {
             const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
             
             onSnapshot(commentsRef, (snapshot) => {
                 const list = document.getElementById('comments-list');
                 const status = document.getElementById('feed-status');
                 if (status) status.remove();
-                list.innerHTML = '';
-                
-                const docs = [];
-                snapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
-                docs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
-                if (docs.length === 0) {
-                    list.innerHTML = '<div class="text-center py-10 text-slate-400">No discussions yet. Be the first to ask Prof. Raval!</div>';
+                const allData = [];
+                snapshot.forEach(doc => allData.push({ id: doc.id, ...doc.data() }));
+                
+                // Rule 2: Sort in memory
+                allData.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+                const mainComments = allData.filter(c => !c.parentId);
+                const replies = allData.filter(c => c.parentId);
+
+                list.innerHTML = '';
+                if (mainComments.length === 0) {
+                    list.innerHTML = '<div class="text-center text-slate-400">No discussions yet. Be the first to start!</div>';
                     return;
                 }
 
-                docs.forEach(data => {
-                    const initials = data.userId.substring(0, 2).toUpperCase();
-                    const colorIndex = data.userId.charCodeAt(0) % 5;
-                    const colors = ['bg-blue-500', 'bg-red-500', 'bg-purple-500', 'bg-green-500', 'bg-yellow-500'];
-                    const bgColor = colors[colorIndex];
-
-                    const div = document.createElement('div');
-                    div.className = 'comment-card p-6 rounded-3xl bg-white border border-slate-100 flex gap-4 shadow-sm mb-4';
-                    div.innerHTML = `
-                        <div class="w-12 h-12 ${bgColor} rounded-2xl flex-shrink-0 flex items-center justify-center text-white font-bold shadow-md">${initials}</div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center mb-1">
-                                <h4 class="font-bold text-slate-800 uppercase text-xs tracking-wider">Explorer_${data.userId.substring(0, 4)}</h4>
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}</span>
-                            </div>
-                            <p class="text-slate-700 leading-relaxed">${escapeHtml(data.text)}</p>
-                            <div class="flex gap-4 mt-3 opacity-40"><span class="text-[10px] font-bold cursor-pointer hover:text-blue-600 uppercase tracking-widest">Reply</span><span class="text-[10px] font-bold cursor-pointer hover:text-green-600 uppercase tracking-widest">Helpful</span></div>
-                        </div>`;
-                    list.appendChild(div);
+                mainComments.forEach(data => {
+                    const commentEl = createCommentMarkup(data, false);
+                    const repliesForThis = replies.filter(r => r.parentId === data.id);
+                    
+                    if (repliesForThis.length > 0) {
+                        const replyContainer = document.createElement('div');
+                        replyContainer.className = 'reply-container mt-4 space-y-4';
+                        repliesForThis.sort((a,b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
+                        repliesForThis.forEach(r => {
+                            replyContainer.appendChild(createCommentMarkup(r, true));
+                        });
+                        commentEl.querySelector('.comment-content-wrapper').appendChild(replyContainer);
+                    }
+                    list.appendChild(commentEl);
                 });
             }, (error) => {
-                console.error("Firestore Error:", error);
-                showStatusError("Database Error: Check your Firestore Rules.");
+                console.error("Firestore error:", error);
             });
+        };
 
-            document.getElementById('submit-comment').onclick = async () => {
-                const input = document.getElementById('comment-input');
-                const text = input.value.trim();
-                if (text && db) {
-                    try {
-                        await addDoc(commentsRef, { text, userId: user.uid, timestamp: serverTimestamp() });
-                        input.value = '';
-                    } catch (e) { console.error(e); }
-                }
-            };
+        const createCommentMarkup = (data, isReply) => {
+            const container = document.createElement('div');
+            container.className = `comment-card p-6 rounded-3xl bg-white border border-slate-100 shadow-sm ${isReply ? 'scale-95 origin-left mb-2' : 'mb-4'}`;
+            
+            const initials = data.userId?.substring(0, 2).toUpperCase() || '??';
+            const colors = ['bg-blue-500', 'bg-purple-500', 'bg-indigo-500', 'bg-pink-500'];
+            const bgColor = colors[Math.abs(data.userId?.charCodeAt(0) % colors.length) || 0];
+
+            container.innerHTML = `
+                <div class="flex gap-4">
+                    <div class="w-10 h-10 ${bgColor} rounded-xl flex-shrink-0 flex items-center justify-center text-white font-bold text-xs shadow-inner">${initials}</div>
+                    <div class="flex-grow comment-content-wrapper">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm">User_${data.userId?.substring(0, 4)}</h4>
+                                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">
+                                    ${data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : 'Just now'}
+                                </p>
+                            </div>
+                            <button class="admin-only text-red-500 text-[10px] font-bold uppercase tracking-widest hover:underline" onclick="window.deleteComment('${data.id}')">Delete</button>
+                        </div>
+                        <p class="text-slate-700 text-sm mb-4 leading-relaxed">${escapeHtml(data.text)}</p>
+                        <div class="flex items-center gap-6">
+                            <button onclick="window.likeComment('${data.id}')" class="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-red-500 transition-colors">
+                                <svg class="w-4 h-4 ${data.likes > 0 ? 'text-red-500 fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                <span>${data.likes || 0}</span>
+                            </button>
+                            ${!isReply ? `
+                                <button onclick="window.toggleReplyInput('${data.id}')" class="text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors">Reply</button>
+                            ` : ''}
+                        </div>
+                        <div id="reply-box-${data.id}" class="hidden mt-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <textarea id="reply-input-${data.id}" class="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-1 focus:ring-blue-500" placeholder="Write a reply..."></textarea>
+                            <div class="flex justify-end gap-2 mt-2">
+                                <button onclick="window.toggleReplyInput('${data.id}')" class="px-4 py-1.5 text-xs font-bold text-slate-500">Cancel</button>
+                                <button onclick="window.postReply('${data.id}')" class="px-5 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-xl shadow-md">Post Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return container;
+        };
+
+        // Global functions for event listeners
+        window.likeComment = async (id) => {
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'comments', id);
+            await updateDoc(docRef, { likes: increment(1) });
+        };
+
+        window.toggleReplyInput = (id) => {
+            const box = document.getElementById(`reply-box-${id}`);
+            box.classList.toggle('hidden');
+            if (!box.classList.contains('hidden')) {
+                document.getElementById(`reply-input-${id}`).focus();
+            }
+        };
+
+        window.postReply = async (parentId) => {
+            const input = document.getElementById(`reply-input-${parentId}`);
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
+            await addDoc(commentsRef, {
+                text,
+                userId: currentUser.uid,
+                parentId: parentId,
+                likes: 0,
+                timestamp: serverTimestamp()
+            });
+            input.value = '';
+            window.toggleReplyInput(parentId);
+            showToast("Reply Published");
+        };
+
+        window.deleteComment = async (id) => {
+            if (!isAdmin) return;
+            if (confirm("Are you sure you want to delete this comment?")) {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'comments', id);
+                await deleteDoc(docRef);
+                showToast("Comment Deleted", "bg-red-600");
+            }
+        };
+
+        // Modal Logic
+        const modal = document.getElementById('admin-modal');
+        const openBtn = document.getElementById('open-admin-modal');
+        const closeBtn = document.getElementById('close-admin-modal');
+        const verifyBtn = document.getElementById('verify-admin-btn');
+        const passInput = document.getElementById('admin-pass-input');
+        const errorMsg = document.getElementById('admin-error');
+
+        openBtn.onclick = () => {
+            if (isAdmin) {
+                showToast("Admin mode is already active!");
+                return;
+            }
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+            }, 10);
+            passInput.focus();
+        };
+
+        const closeModal = () => {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                passInput.value = '';
+                errorMsg.classList.add('hidden');
+            }, 300);
+        };
+
+        closeBtn.onclick = closeModal;
+
+        verifyBtn.onclick = () => {
+            if (passInput.value === "Amit#86854") {
+                isAdmin = true;
+                document.body.classList.add('admin-mode');
+                showToast("Admin Access Granted!", "bg-green-600");
+                closeModal();
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        };
+
+        document.getElementById('submit-comment').onclick = async () => {
+            const input = document.getElementById('comment-input');
+            const text = input.value.trim();
+            if (!text || !currentUser) return;
+
+            const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
+            await addDoc(commentsRef, {
+                text,
+                userId: currentUser.uid,
+                likes: 0,
+                timestamp: serverTimestamp()
+            });
+            input.value = '';
+            showToast("Comment Published");
         };
 
         function escapeHtml(text) {
@@ -261,12 +387,7 @@
             return div.innerHTML;
         }
 
-        window.onload = async () => {
-            const success = await initFirebase();
-            if (success) {
-                onAuthStateChanged(auth, (user) => { if (user) setupComments(user); });
-            }
-        };
+        init();
     </script>
 </body>
 </html>
