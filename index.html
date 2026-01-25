@@ -85,7 +85,7 @@
             </div>
         </div>
 
-        <!-- Professional Fixed Image -->
+        <!-- Fixed Image -->
         <div class="w-full h-80 md:h-[450px] bg-slate-200 rounded-[2.5rem] mb-12 overflow-hidden shadow-2xl border-4 border-white/50">
             <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover" alt="Quantum Processor">
         </div>
@@ -93,8 +93,7 @@
         <article class="glass rounded-[2.5rem] p-8 md:p-14 mb-12">
             <h2 class="text-4xl font-bold mb-8 text-slate-900">The Subatomic Frontier</h2>
             <div class="space-y-6 text-slate-700 text-lg leading-relaxed">
-                <p>As explained by <strong>Professor Amit Raval</strong>, classical computing limits are being shattered. With Quantum Computing, we process data using Qubits that exist in multiple states simultaneously.</p>
-                
+                <p>As explained by <strong>Professor Amit Raval</strong>, we are transitioning from bits to qubits. This change represents the greatest leap in human calculation power since the invention of the abacus.</p>
                 <div class="p-8 bg-slate-900 rounded-3xl text-white shadow-xl">
                     <p class="text-xl italic">"We are not just building faster machines; we are building a new reality."</p>
                     <p class="mt-4 text-right font-bold text-blue-400">— Professor Amit Raval</p>
@@ -124,7 +123,7 @@
             </div>
         </section>
 
-        <!-- Admin Access -->
+        <!-- Admin Access Button -->
         <div class="mt-12 text-center opacity-30 hover:opacity-100 transition-opacity">
             <button id="open-admin-modal" class="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mx-auto px-4 py-2 rounded-full hover:bg-white/10">
                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
@@ -133,16 +132,15 @@
         </div>
     </main>
 
-    <!-- Admin Login Modal -->
+    <!-- Admin Modal -->
     <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden opacity-0 pointer-events-none">
         <div class="glass max-w-sm w-full p-8 rounded-3xl mx-4">
             <h3 class="text-xl font-bold text-slate-900 mb-4">Admin Login</h3>
-            <p class="text-sm text-slate-500 mb-6">Enter the administrator password to enable moderation features.</p>
-            <input type="password" id="admin-pass-input" class="w-full p-3 bg-slate-100 rounded-xl mb-4 border-none outline-none focus:ring-2 focus:ring-blue-500" placeholder="Password">
+            <input type="password" id="admin-pass-input" class="w-full p-3 bg-slate-100 rounded-xl mb-4 outline-none focus:ring-2 focus:ring-blue-500" placeholder="Password">
             <div id="admin-error" class="text-red-500 text-xs mb-4 hidden font-bold">Incorrect password.</div>
             <div class="flex gap-3">
-                <button id="close-admin-modal" class="flex-1 py-3 text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-xl transition-colors">Cancel</button>
-                <button id="verify-admin-btn" class="flex-1 py-3 bg-blue-600 text-white text-sm font-bold rounded-xl shadow-lg hover:bg-blue-700">Verify</button>
+                <button id="close-admin-modal" class="flex-1 py-3 text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-xl">Cancel</button>
+                <button id="verify-admin-btn" class="flex-1 py-3 bg-blue-600 text-white text-sm font-bold rounded-xl shadow-lg">Verify</button>
             </div>
         </div>
     </div>
@@ -155,7 +153,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Your Hardcoded Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDKtkNGcBLjWBXlzIT71ji8y8d2JXcRjBU",
             authDomain: "myquantumpost.firebaseapp.com",
@@ -170,8 +167,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // CONSISTENT APP ID - DO NOT CHANGE THIS TO PERSIST COMMENTS
-        const appId = 'quantum-raval-v-pro-fix';
+        // This ID matches your old code exactly to bring back your comments
+        const appId = 'quantum-raval-v-live';
 
         let currentUser = null;
         let isAdmin = false;
@@ -180,9 +177,7 @@
             const toast = document.getElementById('toast');
             toast.innerText = msg;
             toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 z-[60] px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl transition-all opacity-100 translate-y-0 ${color}`;
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-10');
-            }, 3000);
+            setTimeout(() => toast.classList.add('opacity-0', 'translate-y-10'), 3000);
         };
 
         const init = async () => {
@@ -197,7 +192,6 @@
 
         const setupComments = () => {
             const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
-            
             onSnapshot(commentsRef, (snapshot) => {
                 const list = document.getElementById('comments-list');
                 const status = document.getElementById('feed-status');
@@ -205,8 +199,6 @@
 
                 const allData = [];
                 snapshot.forEach(doc => allData.push({ id: doc.id, ...doc.data() }));
-                
-                // Rule 2: Sort in memory
                 allData.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 const mainComments = allData.filter(c => !c.parentId);
@@ -214,50 +206,41 @@
 
                 list.innerHTML = '';
                 if (mainComments.length === 0) {
-                    list.innerHTML = '<div class="text-center text-slate-400">No discussions yet. Be the first to start!</div>';
+                    list.innerHTML = '<div class="text-center text-slate-400">No comments found. Start the conversation!</div>';
                     return;
                 }
 
                 mainComments.forEach(data => {
                     const commentEl = createCommentMarkup(data, false);
                     const repliesForThis = replies.filter(r => r.parentId === data.id);
-                    
                     if (repliesForThis.length > 0) {
                         const replyContainer = document.createElement('div');
                         replyContainer.className = 'reply-container mt-4 space-y-4';
                         repliesForThis.sort((a,b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
-                        repliesForThis.forEach(r => {
-                            replyContainer.appendChild(createCommentMarkup(r, true));
-                        });
-                        commentEl.querySelector('.comment-content-wrapper').appendChild(replyContainer);
+                        repliesForThis.forEach(r => replyContainer.appendChild(createCommentMarkup(r, true)));
+                        commentEl.querySelector('.content-body').appendChild(replyContainer);
                     }
                     list.appendChild(commentEl);
                 });
-            }, (error) => {
-                console.error("Firestore error:", error);
             });
         };
 
         const createCommentMarkup = (data, isReply) => {
             const container = document.createElement('div');
-            container.className = `comment-card p-6 rounded-3xl bg-white border border-slate-100 shadow-sm ${isReply ? 'scale-95 origin-left mb-2' : 'mb-4'}`;
-            
-            const initials = data.userId?.substring(0, 2).toUpperCase() || '??';
-            const colors = ['bg-blue-500', 'bg-purple-500', 'bg-indigo-500', 'bg-pink-500'];
-            const bgColor = colors[Math.abs(data.userId?.charCodeAt(0) % colors.length) || 0];
+            container.className = `comment-card p-6 rounded-3xl bg-white border border-slate-100 shadow-sm ${isReply ? 'scale-95 origin-left' : 'mb-4'}`;
+            const initials = data.userId?.substring(0, 2).toUpperCase() || 'G';
+            const color = `bg-blue-600`;
 
             container.innerHTML = `
                 <div class="flex gap-4">
-                    <div class="w-10 h-10 ${bgColor} rounded-xl flex-shrink-0 flex items-center justify-center text-white font-bold text-xs shadow-inner">${initials}</div>
-                    <div class="flex-grow comment-content-wrapper">
-                        <div class="flex justify-between items-start mb-2">
+                    <div class="w-10 h-10 ${color} rounded-xl flex-shrink-0 flex items-center justify-center text-white font-bold text-xs">${initials}</div>
+                    <div class="flex-grow content-body">
+                        <div class="flex justify-between items-start mb-1">
                             <div>
-                                <h4 class="font-bold text-slate-800 text-sm">User_${data.userId?.substring(0, 4)}</h4>
-                                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">
-                                    ${data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : 'Just now'}
-                                </p>
+                                <h4 class="font-bold text-slate-800 text-sm">Explorer_${data.userId?.substring(0, 4)}</h4>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase">${data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : 'Just now'}</p>
                             </div>
-                            <button class="admin-only text-red-500 text-[10px] font-bold uppercase tracking-widest hover:underline" onclick="window.deleteComment('${data.id}')">Delete</button>
+                            <button class="admin-only text-red-500 text-[10px] font-bold uppercase hover:underline" onclick="window.deleteComment('${data.id}')">Delete</button>
                         </div>
                         <p class="text-slate-700 text-sm mb-4 leading-relaxed">${escapeHtml(data.text)}</p>
                         <div class="flex items-center gap-6">
@@ -265,101 +248,67 @@
                                 <svg class="w-4 h-4 ${data.likes > 0 ? 'text-red-500 fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                                 <span>${data.likes || 0}</span>
                             </button>
-                            ${!isReply ? `
-                                <button onclick="window.toggleReplyInput('${data.id}')" class="text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors">Reply</button>
-                            ` : ''}
+                            ${!isReply ? `<button onclick="window.toggleReply('${data.id}')" class="text-xs font-bold text-slate-400 hover:text-blue-600">Reply</button>` : ''}
                         </div>
-                        <div id="reply-box-${data.id}" class="hidden mt-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                            <textarea id="reply-input-${data.id}" class="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-1 focus:ring-blue-500" placeholder="Write a reply..."></textarea>
+                        <div id="reply-box-${data.id}" class="hidden mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                            <textarea id="reply-input-${data.id}" class="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm outline-none" placeholder="Write a reply..."></textarea>
                             <div class="flex justify-end gap-2 mt-2">
-                                <button onclick="window.toggleReplyInput('${data.id}')" class="px-4 py-1.5 text-xs font-bold text-slate-500">Cancel</button>
-                                <button onclick="window.postReply('${data.id}')" class="px-5 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-xl shadow-md">Post Reply</button>
+                                <button onclick="window.toggleReply('${data.id}')" class="px-4 py-1.5 text-xs font-bold text-slate-500">Cancel</button>
+                                <button onclick="window.postReply('${data.id}')" class="px-4 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-xl">Post</button>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
             return container;
         };
 
-        // Global functions for event listeners
         window.likeComment = async (id) => {
             const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'comments', id);
             await updateDoc(docRef, { likes: increment(1) });
         };
 
-        window.toggleReplyInput = (id) => {
-            const box = document.getElementById(`reply-box-${id}`);
-            box.classList.toggle('hidden');
-            if (!box.classList.contains('hidden')) {
-                document.getElementById(`reply-input-${id}`).focus();
-            }
-        };
+        window.toggleReply = (id) => document.getElementById(`reply-box-${id}`).classList.toggle('hidden');
 
         window.postReply = async (parentId) => {
             const input = document.getElementById(`reply-input-${parentId}`);
             const text = input.value.trim();
             if (!text) return;
-            
             const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
-            await addDoc(commentsRef, {
-                text,
-                userId: currentUser.uid,
-                parentId: parentId,
-                likes: 0,
-                timestamp: serverTimestamp()
-            });
+            await addDoc(commentsRef, { text, userId: currentUser.uid, parentId, likes: 0, timestamp: serverTimestamp() });
             input.value = '';
-            window.toggleReplyInput(parentId);
+            window.toggleReply(parentId);
             showToast("Reply Published");
         };
 
         window.deleteComment = async (id) => {
-            if (!isAdmin) return;
-            if (confirm("Are you sure you want to delete this comment?")) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'comments', id);
-                await deleteDoc(docRef);
-                showToast("Comment Deleted", "bg-red-600");
+            if (isAdmin && confirm("Delete comment?")) {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'comments', id));
+                showToast("Deleted", "bg-red-600");
             }
         };
 
-        // Modal Logic
+        // Admin Modal Logic
         const modal = document.getElementById('admin-modal');
-        const openBtn = document.getElementById('open-admin-modal');
-        const closeBtn = document.getElementById('close-admin-modal');
-        const verifyBtn = document.getElementById('verify-admin-btn');
         const passInput = document.getElementById('admin-pass-input');
         const errorMsg = document.getElementById('admin-error');
 
-        openBtn.onclick = () => {
-            if (isAdmin) {
-                showToast("Admin mode is already active!");
-                return;
-            }
+        document.getElementById('open-admin-modal').onclick = () => {
             modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-            }, 10);
+            setTimeout(() => modal.classList.remove('opacity-0', 'pointer-events-none'), 10);
             passInput.focus();
         };
 
-        const closeModal = () => {
+        document.getElementById('close-admin-modal').onclick = () => {
             modal.classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                passInput.value = '';
-                errorMsg.classList.add('hidden');
-            }, 300);
+            setTimeout(() => modal.classList.add('hidden'), 300);
         };
 
-        closeBtn.onclick = closeModal;
-
-        verifyBtn.onclick = () => {
+        document.getElementById('verify-admin-btn').onclick = () => {
             if (passInput.value === "Amit#86854") {
                 isAdmin = true;
                 document.body.classList.add('admin-mode');
-                showToast("Admin Access Granted!", "bg-green-600");
-                closeModal();
+                showToast("Admin Mode Active", "bg-green-600");
+                document.getElementById('close-admin-modal').click();
             } else {
                 errorMsg.classList.remove('hidden');
             }
@@ -368,17 +317,12 @@
         document.getElementById('submit-comment').onclick = async () => {
             const input = document.getElementById('comment-input');
             const text = input.value.trim();
-            if (!text || !currentUser) return;
-
-            const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
-            await addDoc(commentsRef, {
-                text,
-                userId: currentUser.uid,
-                likes: 0,
-                timestamp: serverTimestamp()
-            });
-            input.value = '';
-            showToast("Comment Published");
+            if (text && currentUser) {
+                const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
+                await addDoc(commentsRef, { text, userId: currentUser.uid, likes: 0, timestamp: serverTimestamp() });
+                input.value = '';
+                showToast("Comment Published");
+            }
         };
 
         function escapeHtml(text) {
