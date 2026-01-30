@@ -3,184 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Horizons - Prof. Amit Raval</title>
+    <title>Python Masterclass Live - Prof. Amit Raval 🇮🇳</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js" type="module"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js" type="module"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js" type="module"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs (Compat version for simple HTML usage) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; /* Slate 900 */ }
         
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background: linear-gradient(135deg, #ff4d4d, #f9d423, #4facfe, #ff00cc, #33d9b2);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            background-attachment: fixed;
-            color: #1e293b; 
-            user-select: none; 
-            overflow-x: hidden;
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #f97316; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .glass { 
-            background: rgba(255, 255, 255, 0.95); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.4); 
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15); 
+        .option-btn { transition: all 0.2s ease; }
+        .option-btn:hover:not(:disabled) { 
+            transform: translateX(5px); 
+            background-color: #2a303c; 
+            border-color: #f97316; 
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
         }
         
-        .header-text {
-            color: white;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tricolor-text {
+            background: linear-gradient(to right, #FF9933, #FFFFFF, #138808);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-
-        .comment-card { transition: all 0.2s ease; }
-        .reply-container { border-left: 2px solid rgba(59, 130, 246, 0.3); margin-left: 0.75rem; padding-left: 0.75rem; }
-        @media (min-width: 640px) {
-            .reply-container { margin-left: 1.5rem; padding-left: 1.5rem; }
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
-        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
-
-        .admin-only { display: none !important; }
-        body.admin-mode .admin-only { display: inline-block !important; }
-        
-        #admin-modal { transition: opacity 0.3s ease; }
+        .tricolor-border-top { border-top: 4px solid #FF9933; }
+        .tricolor-bg { background: linear-gradient(90deg, #FF9933 0%, #ffffff 50%, #138808 100%); }
     </style>
-
-    <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function (e) {
-            if (e.keyCode == 123) return false;
-            if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
-            if (e.ctrlKey && e.keyCode == 85) return false;
-        };
-    </script>
 </head>
-<body class="min-h-screen pb-12 sm:pb-20">
+<body class="text-slate-200 relative">
 
-    <header class="py-10 sm:py-16 px-4 text-center">
-        <h1 class="text-3xl sm:text-5xl md:text-7xl font-extrabold header-text mb-4 tracking-tight">Quantum Horizons</h1>
-        <p class="text-white text-base sm:text-xl font-medium opacity-90">Insights into the Future of Computation</p>
-    </header>
-
-    <main class="max-w-4xl mx-auto px-4 sm:px-6">
-        
-        <!-- Professor Profile -->
-        <div class="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 mb-6 sm:mb-8 flex flex-col sm:flex-row items-center gap-5 sm:gap-8 border-l-4 sm:border-l-8 border-blue-600">
-            <div class="relative">
-                <div class="w-20 h-20 sm:w-28 sm:h-28 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl sm:text-4xl font-bold shadow-2xl rotate-3">AR</div>
-                <div class="absolute -bottom-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 border-2 sm:border-4 border-white rounded-full"></div>
-            </div>
-            <div class="text-center sm:text-left">
-                <h2 class="text-xl sm:text-3xl font-bold text-slate-900">Professor Amit Raval</h2>
-                <p class="text-blue-600 font-semibold text-sm sm:text-lg mb-2 sm:mb-3">Lead Researcher & Technology Visionary</p>
-                <p class="text-slate-600 text-sm sm:text-base italic">"The quantum world doesn't play by our rules. Understanding it requires us to rethink everything we know about reality."</p>
-            </div>
-        </div>
-
-        <!-- Fixed Image -->
-        <div class="w-full h-56 sm:h-80 md:h-[450px] bg-slate-200 rounded-2xl sm:rounded-[2.5rem] mb-8 sm:mb-12 overflow-hidden shadow-2xl border-2 sm:border-4 border-white/50">
-            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&q=80&w=2000" class="w-full h-full object-cover" alt="Quantum Processor">
-        </div>
-
-        <article class="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-14 mb-8 sm:mb-12">
-            <h2 class="text-2xl sm:text-4xl font-bold mb-6 sm:mb-8 text-slate-900">The Subatomic Frontier</h2>
-            <div class="space-y-4 sm:space-y-6 text-slate-700 text-sm sm:text-lg leading-relaxed">
-                <p>
-                    As explained by <strong>Professor Amit Raval</strong>, classical computing is hitting a physical wall. We are shrinking transistors to the size of atoms, where quantum tunneling begins to interfere with logic.
-                </p>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 py-4 sm:py-6">
-                    <div class="p-6 sm:p-8 bg-blue-50/50 rounded-2xl sm:rounded-3xl border border-blue-100">
-                        <h3 class="font-bold text-slate-900 text-lg sm:text-xl mb-2">Superposition</h3>
-                        <p class="text-xs sm:text-sm text-slate-500">Processing infinite variables simultaneously rather than sequentially.</p>
-                    </div>
-                    <div class="p-6 sm:p-8 bg-purple-50/50 rounded-2xl sm:rounded-3xl border border-purple-100">
-                        <h3 class="font-bold text-slate-900 text-lg sm:text-xl mb-2">Entanglement</h3>
-                        <p class="text-xs sm:text-sm text-slate-500">Instant correlation between particles, identified by Prof. Raval as the key to secure communication.</p>
-                    </div>
-                </div>
-
-                <div class="p-6 sm:p-8 bg-slate-900 rounded-2xl sm:rounded-3xl text-white shadow-xl relative overflow-hidden">
-                    <p class="text-base sm:text-xl italic font-light">"Quantum supremacy isn't just a milestone; it's the moment we start speaking the language of the universe."</p>
-                    <p class="mt-4 text-right font-bold text-blue-400 text-sm sm:text-base">— Professor Amit Raval</p>
-                </div>
-            </div>
-        </article>
-
-        <!-- Live Discussion Feed -->
-        <section class="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-14 mb-10">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 sm:mb-10">
-                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Discussion Feed</h2>
-                <div class="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-1.5 rounded-full text-xs font-bold w-fit">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    LIVE NOW
-                </div>
-            </div>
+    <!-- LOGIN SCREEN (Overlay) -->
+    <div id="login-screen" class="fixed inset-0 z-[100] bg-slate-900 flex items-center justify-center p-4">
+        <div class="bg-slate-800 p-8 rounded-2xl shadow-2xl max-w-md w-full border border-slate-700 tricolor-border-top ring-1 ring-white/10 text-center">
+            <h1 class="text-3xl font-bold mb-2">Welcome Students 🇮🇳</h1>
+            <p class="text-orange-400 text-sm mb-6">Python Masterclass - Prof. Amit Raval</p>
             
-            <div class="mb-8 sm:mb-12 bg-slate-50 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200">
-                <div class="flex items-start gap-3 sm:gap-4 mb-4">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-slate-200 rounded-full flex-shrink-0 flex items-center justify-center text-slate-500">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                    </div>
-                    <textarea id="comment-input" class="w-full bg-transparent border-none focus:ring-0 text-slate-800 placeholder:text-slate-400 text-base sm:text-lg resize-none min-h-[80px]" placeholder="Ask Professor Raval a question..."></textarea>
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-slate-400 text-xs uppercase font-bold mb-2">Student Name</label>
+                    <input type="text" id="student-name" placeholder="Enter your full name" 
+                        class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
                 </div>
-                <div class="flex justify-end pt-4 border-t border-slate-200">
-                    <button id="submit-comment" class="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl sm:rounded-2xl transition-all shadow-lg shadow-blue-200 active:scale-95">Post Comment</button>
+                <div>
+                    <label class="block text-slate-400 text-xs uppercase font-bold mb-2">Roll Number</label>
+                    <input type="text" id="student-roll" placeholder="Ex: 21CS001" 
+                        class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500">
                 </div>
+                <button onclick="startQuiz()" class="w-full tricolor-bg text-slate-900 font-bold py-3 rounded-lg hover:opacity-90 transition transform hover:scale-105 mt-4">
+                    Start Quiz <i class="fas fa-arrow-right ml-2"></i>
+                </button>
             </div>
-
-            <div id="comments-list" class="space-y-6 sm:space-y-8 max-h-[600px] overflow-y-auto pr-1 sm:pr-2">
-                <div class="flex justify-center py-10" id="feed-status">
-                    <div class="flex flex-col items-center gap-4">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <span class="text-slate-400 font-medium text-sm" id="status-text">Synchronizing with live feed...</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Admin Access Button -->
-        <div class="mt-8 sm:mt-12 text-center opacity-30 hover:opacity-100 transition-opacity">
-            <button id="open-admin-modal" class="text-[10px] sm:text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mx-auto px-4 py-2 rounded-full hover:bg-white/10">
-                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-                Admin Access
-            </button>
-        </div>
-    </main>
-
-    <!-- Admin Modal -->
-    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden opacity-0 pointer-events-none p-4">
-        <div class="glass max-w-sm w-full p-6 sm:p-8 rounded-2xl sm:rounded-3xl">
-            <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-4">Admin Login</h3>
-            <input type="password" id="admin-pass-input" class="w-full p-3 bg-slate-100 rounded-xl mb-4 outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Password">
-            <div id="admin-error" class="text-red-500 text-[10px] sm:text-xs mb-4 hidden font-bold text-center">Incorrect password.</div>
-            <div class="flex gap-3">
-                <button id="close-admin-modal" class="flex-1 py-3 text-xs sm:text-sm font-bold text-slate-500 hover:bg-slate-100 rounded-xl">Cancel</button>
-                <button id="verify-admin-btn" class="flex-1 py-3 bg-blue-600 text-white text-xs sm:text-sm font-bold rounded-xl shadow-lg">Verify</button>
-            </div>
+            <p id="login-error" class="text-red-400 text-xs mt-3 hidden"><i class="fas fa-exclamation-triangle"></i> Please fill all details.</p>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 z-[60] px-4 sm:px-6 py-2 sm:py-3 rounded-full text-white font-bold text-[10px] sm:text-sm shadow-2xl transition-all opacity-0 translate-y-10 pointer-events-none text-center"></div>
+    <!-- MAIN APP (Hidden initially) -->
+    <div id="app-content" class="hidden">
+        
+        <!-- Header -->
+        <header class="sticky top-0 z-50 bg-slate-950 text-white shadow-lg border-b border-orange-600/50">
+            <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold flex items-center gap-2">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-white to-green-400">
+                            Prof. Amit Raval
+                        </span>
+                        <span>🇮🇳</span>
+                    </h1>
+                    <p class="text-[10px] text-slate-400" id="user-display">Guest</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-lg font-bold text-white"><span id="score" class="text-green-400">0</span> <span class="text-slate-500">/</span> 60</div>
+                    <div class="text-xs text-slate-400">Current Score</div>
+                </div>
+            </div>
+            <div class="h-1 w-full bg-slate-800">
+                <div id="progress-bar" class="h-full tricolor-bg transition-all duration-300 shadow-[0_0_10px_rgba(255,255,255,0.3)]" style="width: 0%"></div>
+            </div>
+        </header>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        <main class="max-w-4xl mx-auto px-4 py-8 pb-20">
+            
+            <!-- Quiz Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Questions Area -->
+                <div class="lg:col-span-2 space-y-6">
+                     <!-- Filter -->
+                     <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row gap-3 items-center">
+                        <label class="text-sm font-bold text-slate-300"><i class="fas fa-filter mr-2 text-orange-500"></i>Topic:</label>
+                        <select id="topic-filter" class="w-full flex-1 bg-slate-900 border-slate-600 border rounded-md p-2 text-sm text-slate-200 outline-none">
+                            <option value="all">All Topics (Mixed)</option>
+                            <option value="history">History & Basics</option>
+                            <option value="variables">Variables & DataTypes</option>
+                            <option value="comparison">C/Java vs Python</option>
+                            <option value="operators">Arithmetic Operators</option>
+                            <option value="datastructures">Lists, Tuples & Dicts</option>
+                            <option value="control">Control Statements</option>
+                            <option value="loops">Looping</option>
+                            <option value="modules">Modules</option>
+                            <option value="files">File Handling</option>
+                        </select>
+                    </div>
 
+                    <!-- Questions Container -->
+                    <div id="quiz-container" class="space-y-6"></div>
+
+                    <!-- Submit Score Button -->
+                    <div class="bg-slate-800 p-6 rounded-xl border border-green-500/50 text-center shadow-lg mt-8">
+                        <h3 class="text-lg font-semibold text-white mb-2">Finished Practice?</h3>
+                        <p class="text-slate-400 text-sm mb-4">Submit your score to the Live Leaderboard to see where you stand!</p>
+                        <button onclick="submitScoreToFirebase()" id="submit-btn" class="bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-full font-bold transition shadow-[0_0_15px_rgba(22,163,74,0.4)]">
+                            <i class="fas fa-paper-plane mr-2"></i> Submit Final Score
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Leaderboard Sidebar -->
+                <div class="lg:col-span-1">
+                    <div class="bg-slate-800 rounded-xl border border-slate-700 shadow-xl sticky top-24 overflow-hidden">
+                        <div class="p-4 bg-slate-900 border-b border-slate-700 flex justify-between items-center">
+                            <h3 class="font-bold text-orange-400"><i class="fas fa-trophy mr-2"></i>Live Leaderboard</h3>
+                            <span class="text-xs text-green-400 animate-pulse">● Live</span>
+                        </div>
+                        <div class="p-2 max-h-[500px] overflow-y-auto" id="leaderboard-list">
+                            <div class="text-center py-4 text-slate-500 text-xs">Loading scores...</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="bg-slate-900 py-6 text-center text-xs text-slate-500 border-t border-slate-800">
+            &copy; 2026 Professor Amit Raval 🇮🇳 | Python Masterclass
+        </footer>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. FIREBASE CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyDKtkNGcBLjWBXlzIT71ji8y8d2JXcRjBU",
             authDomain: "myquantumpost.firebaseapp.com",
@@ -191,173 +168,302 @@
             measurementId: "G-6KD2X66ZL5"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        const appId = 'quantum-raval-v-live';
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const COLLECTION_NAME = "python_quiz_scores"; // Collection name in Firestore
 
-        let currentUser = null;
-        let isAdmin = false;
+        // --- 2. USER STATE ---
+        let currentUser = { name: "", roll: "" };
+        let currentScore = 0;
+        let answeredCount = 0;
 
-        const showToast = (msg, color = 'bg-slate-900') => {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.className = `fixed bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 z-[60] px-4 sm:px-6 py-2 sm:py-3 rounded-full text-white font-bold text-[10px] sm:text-sm shadow-2xl transition-all opacity-100 translate-y-0 ${color}`;
-            setTimeout(() => toast.classList.add('opacity-0', 'translate-y-10'), 3000);
-        };
+        // --- 3. LOGIN LOGIC ---
+        function startQuiz() {
+            const nameIn = document.getElementById('student-name').value.trim();
+            const rollIn = document.getElementById('student-roll').value.trim();
+            const errorMsg = document.getElementById('login-error');
 
-        const init = async () => {
-            await signInAnonymously(auth);
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    currentUser = user;
-                    setupComments();
-                }
-            });
-        };
-
-        const setupComments = () => {
-            const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
-            onSnapshot(commentsRef, (snapshot) => {
-                const list = document.getElementById('comments-list');
-                const status = document.getElementById('feed-status');
-                if (status) status.remove();
-
-                const allData = [];
-                snapshot.forEach(doc => allData.push({ id: doc.id, ...doc.data() }));
-                allData.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
-                const mainComments = allData.filter(c => !c.parentId);
-                const replies = allData.filter(c => c.parentId);
-
-                list.innerHTML = '';
-                if (mainComments.length === 0) {
-                    list.innerHTML = '<div class="text-center text-slate-400 text-sm">No comments found. Start the conversation!</div>';
-                    return;
-                }
-
-                mainComments.forEach(data => {
-                    const commentEl = createCommentMarkup(data, false);
-                    const repliesForThis = replies.filter(r => r.parentId === data.id);
-                    if (repliesForThis.length > 0) {
-                        const replyContainer = document.createElement('div');
-                        replyContainer.className = 'reply-container mt-4 space-y-4';
-                        repliesForThis.sort((a,b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
-                        repliesForThis.forEach(r => replyContainer.appendChild(createCommentMarkup(r, true)));
-                        commentEl.querySelector('.content-body').appendChild(replyContainer);
-                    }
-                    list.appendChild(commentEl);
-                });
-            });
-        };
-
-        const createCommentMarkup = (data, isReply) => {
-            const container = document.createElement('div');
-            container.className = `comment-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border border-slate-100 shadow-sm ${isReply ? 'scale-[0.98] sm:scale-95 origin-left' : 'mb-3 sm:mb-4'}`;
-            const initials = data.userId?.substring(0, 2).toUpperCase() || 'G';
-            const color = `bg-blue-600`;
-
-            container.innerHTML = `
-                <div class="flex gap-3 sm:gap-4">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 ${color} rounded-lg sm:rounded-xl flex-shrink-0 flex items-center justify-center text-white font-bold text-[10px] sm:text-xs">${initials}</div>
-                    <div class="flex-grow content-body">
-                        <div class="flex justify-between items-start mb-1">
-                            <div>
-                                <h4 class="font-bold text-slate-800 text-xs sm:text-sm">Explorer_${data.userId?.substring(0, 4)}</h4>
-                                <p class="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-tighter sm:tracking-normal">${data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : 'Just now'}</p>
-                            </div>
-                            <button class="admin-only text-red-500 text-[8px] sm:text-[10px] font-bold uppercase hover:underline" onclick="window.deleteComment('${data.id}')">Delete</button>
-                        </div>
-                        <p class="text-slate-700 text-xs sm:text-sm mb-3 sm:mb-4 leading-relaxed">${escapeHtml(data.text)}</p>
-                        <div class="flex items-center gap-4 sm:gap-6">
-                            <button onclick="window.likeComment('${data.id}')" class="flex items-center gap-1.5 text-[10px] sm:text-xs font-bold text-slate-400 hover:text-red-500 transition-colors">
-                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 ${data.likes > 0 ? 'text-red-500 fill-current' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                                <span>${data.likes || 0}</span>
-                            </button>
-                            ${!isReply ? `<button onclick="window.toggleReply('${data.id}')" class="text-[10px] sm:text-xs font-bold text-slate-400 hover:text-blue-600">Reply</button>` : ''}
-                        </div>
-                        <div id="reply-box-${data.id}" class="hidden mt-3 sm:mt-4 p-3 sm:p-4 bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-200">
-                            <textarea id="reply-input-${data.id}" class="w-full p-2 sm:p-3 bg-white border border-slate-200 rounded-lg sm:rounded-xl text-xs sm:text-sm outline-none" placeholder="Write a reply..."></textarea>
-                            <div class="flex justify-end gap-2 mt-2">
-                                <button onclick="window.toggleReply('${data.id}')" class="px-3 py-1 text-[10px] sm:text-xs font-bold text-slate-500">Cancel</button>
-                                <button onclick="window.postReply('${data.id}')" class="px-3 py-1 bg-blue-600 text-white text-[10px] sm:text-xs font-bold rounded-lg sm:rounded-xl">Post</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            return container;
-        };
-
-        window.likeComment = async (id) => {
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'comments', id);
-            await updateDoc(docRef, { likes: increment(1) });
-        };
-
-        window.toggleReply = (id) => document.getElementById(`reply-box-${id}`).classList.toggle('hidden');
-
-        window.postReply = async (parentId) => {
-            const input = document.getElementById(`reply-input-${parentId}`);
-            const text = input.value.trim();
-            if (!text) return;
-            const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
-            await addDoc(commentsRef, { text, userId: currentUser.uid, parentId, likes: 0, timestamp: serverTimestamp() });
-            input.value = '';
-            window.toggleReply(parentId);
-            showToast("Reply Published");
-        };
-
-        window.deleteComment = async (id) => {
-            if (isAdmin && confirm("Delete comment?")) {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'comments', id));
-                showToast("Deleted", "bg-red-600");
-            }
-        };
-
-        const modal = document.getElementById('admin-modal');
-        const passInput = document.getElementById('admin-pass-input');
-        const errorMsg = document.getElementById('admin-error');
-
-        document.getElementById('open-admin-modal').onclick = () => {
-            modal.classList.remove('hidden');
-            setTimeout(() => modal.classList.remove('opacity-0', 'pointer-events-none'), 10);
-            passInput.focus();
-        };
-
-        document.getElementById('close-admin-modal').onclick = () => {
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        };
-
-        document.getElementById('verify-admin-btn').onclick = () => {
-            if (passInput.value === "Amit#86854") {
-                isAdmin = true;
-                document.body.classList.add('admin-mode');
-                showToast("Admin Mode Active", "bg-green-600");
-                document.getElementById('close-admin-modal').click();
-            } else {
+            if (!nameIn || !rollIn) {
                 errorMsg.classList.remove('hidden');
+                return;
             }
-        };
 
-        document.getElementById('submit-comment').onclick = async () => {
-            const input = document.getElementById('comment-input');
-            const text = input.value.trim();
-            if (text && currentUser) {
-                const commentsRef = collection(db, 'artifacts', appId, 'public', 'data', 'comments');
-                await addDoc(commentsRef, { text, userId: currentUser.uid, likes: 0, timestamp: serverTimestamp() });
-                input.value = '';
-                showToast("Comment Published");
-            }
-        };
+            currentUser.name = nameIn;
+            currentUser.roll = rollIn;
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+            // UI Switch
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('hidden');
+            document.getElementById('user-display').innerText = `${currentUser.name} (${currentUser.roll})`;
+            
+            // Start Leaderboard Listener
+            listenToLeaderboard();
         }
 
-        init();
+        // --- 4. DATA & QUIZ LOGIC ---
+        const allQuestions = [
+             // --- History & Basics ---
+             { id: 1, category: "history", q: "Who developed Python?", options: ["Dennis Ritchie", "Guido van Rossum", "James Gosling", "Bjarne Stroustrup"], ans: 1, exp: "Guido van Rossum developed Python in the late 1980s." },
+            { id: 2, category: "history", q: "Year of Python 1.0 release?", options: ["1989", "1991", "1994", "2000"], ans: 2, exp: "Python 1.0 was released in Jan 1994." },
+            { id: 3, category: "history", q: "Python named after?", options: ["Monty Python's Flying Circus", "Snake", "Patrol", "Coding"], ans: 0, exp: "Named after the BBC comedy series 'Monty Python's Flying Circus'." },
+            { id: 4, category: "history", q: "Python file extension?", options: [".pt", ".pyt", ".py", ".python"], ans: 2, exp: ".py is the standard extension." },
+            { id: 5, category: "history", q: "Python is an ______ language.", options: ["Compiled", "Interpreted", "Assembly", "Machine"], ans: 1, exp: "Python is interpreted line by line." },
+            { id: 6, category: "history", q: "Output function in Python 3?", options: ["echo()", "printf()", "print()", "out()"], ans: 2, exp: "print() sends output to console." },
+
+            // --- Variables ---
+            { id: 7, category: "variables", q: "Invalid variable name?", options: ["_myVar", "my_var2", "2myVar", "myVar"], ans: 2, exp: "Cannot start with a number." },
+            { id: 8, category: "variables", q: "Check data type?", options: ["typeof()", "type()", "check()", "datatype()"], ans: 1, exp: "type(variable) returns the class." },
+            { id: 9, category: "variables", q: "Dynamically Typed means?", options: ["Declare types", "Type at runtime", "Static type", "No types"], ans: 1, exp: "Interpreter infers type at runtime." },
+            { id: 10, category: "variables", q: "Global var inside function?", options: ["all", "extern", "global", "public"], ans: 2, exp: "Use 'global x' to modify global variable." },
+            { id: 11, category: "variables", q: "Result of int(2.8)?", options: ["2.8", "3", "2", "Error"], ans: 2, exp: "int() truncates decimal part." },
+
+            // --- Comparisons ---
+            { id: 12, category: "comparison", q: "Blocks defined by?", options: ["{}", ";", "Indentation", "()"], ans: 2, exp: "Python uses indentation/whitespace." },
+            { id: 13, category: "comparison", q: "Faster execution?", options: ["Python", "C++", "Equal", "Python > C"], ans: 1, exp: "C++ is compiled and generally faster." },
+            { id: 14, category: "comparison", q: "Requires main()?", options: ["Yes", "No", "Classes only", "Modules only"], ans: 1, exp: "Python scripts run top-down without main()." },
+
+            // --- Operators ---
+            { id: 15, category: "operators", q: "10 // 3 result?", options: ["3.33", "3.0", "3", "1"], ans: 2, exp: "// is Floor Division." },
+            { id: 16, category: "operators", q: "2 ** 3 result?", options: ["6", "8", "5", "9"], ans: 1, exp: "** is Exponentiation." },
+            { id: 17, category: "operators", q: "10 % 3 result?", options: ["3", "1", "3.33", "0"], ans: 1, exp: "% is Modulo (Remainder)." },
+            { id: 18, category: "operators", q: "String concat operator?", options: [".", "&", "+", ","], ans: 2, exp: "+ joins strings." },
+
+            // --- Data Structures ---
+            { id: 19, category: "datastructures", q: "Create List syntax?", options: ["{}", "[]", "()", "<>"], ans: 1, exp: "Square brackets [] for lists." },
+            { id: 20, category: "datastructures", q: "Immutable type?", options: ["List", "Dict", "Tuple", "Set"], ans: 2, exp: "Tuples cannot be changed." },
+            { id: 21, category: "datastructures", q: "Access Dict value?", options: ["d[0]", "d['key']", "d.key", "d->key"], ans: 1, exp: "Use key in brackets." },
+            { id: 22, category: "datastructures", q: "Add to list end?", options: ["push()", "add()", "insert()", "append()"], ans: 3, exp: "list.append(item)." },
+            { id: 23, category: "datastructures", q: "Allows duplicates?", options: ["Set", "Dict Keys", "List", "None"], ans: 2, exp: "Lists allow duplicate items." },
+            { id: 24, category: "datastructures", q: "Create Tuple?", options: ["[]", "{}", "()", "tuple{}"], ans: 2, exp: "Parentheses () for tuples." },
+            { id: 25, category: "datastructures", q: "Remove last item?", options: ["remove()", "pop()", "delete()", "end()"], ans: 1, exp: "pop() removes last by default." },
+            { id: 26, category: "datastructures", q: "a[-1] refers to?", options: ["First", "Last", "Error", "None"], ans: 1, exp: "Negative index counts from end." },
+            { id: 27, category: "datastructures", q: "Tuple inside List?", options: ["Yes", "No", "Error", "Empty only"], ans: 0, exp: "Nesting is allowed." },
+            { id: 28, category: "datastructures", q: "Get length?", options: ["count()", "size()", "length()", "len()"], ans: 3, exp: "len() is the built-in function." },
+
+            // --- Control ---
+            { id: 29, category: "control", q: "Else If keyword?", options: ["elseif", "else if", "elif", "elsif"], ans: 2, exp: "Python uses 'elif'." },
+            { id: 30, category: "control", q: "After condition char?", options: [";", "{}", ":", "then"], ans: 2, exp: "Colon : starts the block." },
+            { id: 31, category: "control", q: "Logical AND?", options: ["&", "and", "&&", "both"], ans: 1, exp: "Keyword 'and'." },
+            { id: 32, category: "control", q: "if True: print('A') else: print('B')?", options: ["A", "B", "AB", "Error"], ans: 0, exp: "Condition is True." },
+            { id: 33, category: "control", q: "One line if-else?", options: ["Ternary", "Short", "Quick", "Lambda"], ans: 0, exp: "Ternary operator." },
+
+            // --- Loops ---
+            { id: 34, category: "loops", q: "Loop known iterations?", options: ["while", "do-while", "for", "repeat"], ans: 2, exp: "For loops iterate over sequences." },
+            { id: 35, category: "loops", q: "range(5) gives?", options: ["1-5", "0-5", "0-4", "1-4"], ans: 2, exp: "0, 1, 2, 3, 4." },
+            { id: 36, category: "loops", q: "Stop loop completely?", options: ["stop", "exit", "break", "continue"], ans: 2, exp: "break exits the loop." },
+            { id: 37, category: "loops", q: "While loop syntax?", options: ["while x<5:", "while(x<5)", "while x<5 then", "loop"], ans: 0, exp: "while condition:" },
+            { id: 38, category: "loops", q: "[x for x in range(3)] is?", options: ["List Comp", "Tuple", "Loop", "Dict"], ans: 0, exp: "List Comprehension." },
+            { id: 39, category: "loops", q: "Loop else block?", options: ["No", "Yes", "While only", "For only"], ans: 1, exp: "Runs if no break occurred." },
+            { id: 40, category: "loops", q: "Skip iteration?", options: ["skip", "pass", "break", "continue"], ans: 3, exp: "continue goes to next iteration." },
+
+            // --- Comprehensions ---
+            { id: 41, category: "loops", q: "[x for x in s if c] is?", options: ["Lambda", "Map", "List Comp", "Filter"], ans: 2, exp: "List Comprehension pattern." },
+            { id: 42, category: "loops", q: "[x for x in [1,2] if x>1]?", options: ["[1,2]", "[2]", "[1]", "[]"], ans: 1, exp: "Only 2 is > 1." },
+
+            // --- Modules ---
+            { id: 43, category: "modules", q: "Import keyword?", options: ["include", "import", "using", "require"], ans: 1, exp: "import module." },
+            { id: 44, category: "modules", q: "Alias module?", options: ["name", "as", "from", "alias"], ans: 1, exp: "import pandas as pd." },
+            { id: 45, category: "modules", q: "List module names?", options: ["list()", "names()", "dir()", "help()"], ans: 2, exp: "dir(module)." },
+            { id: 46, category: "modules", q: "Create module?", options: ["No", "Save .py", "Compile", "IDLE only"], ans: 1, exp: "Any .py file is a module." },
+            { id: 47, category: "modules", q: "Random numbers module?", options: ["math", "rnd", "random", "shuffle"], ans: 2, exp: "import random." },
+            { id: 48, category: "modules", q: "Import specific func?", options: ["import x from y", "from y import x", "get y.x", "include"], ans: 1, exp: "from module import function." },
+
+            // --- Files ---
+            { id: 49, category: "files", q: "Open file?", options: ["file()", "open()", "read()", "load()"], ans: 1, exp: "open(filename)." },
+            { id: 50, category: "files", q: "Mode 'w'?", options: ["Read", "Write (Overwrite)", "Append", "Create"], ans: 1, exp: "Writes and truncates." },
+            { id: 51, category: "files", q: "Mode 'a'?", options: ["Append", "Ask", "Archive", "Array"], ans: 0, exp: "Appends to end." },
+            { id: 52, category: "files", q: "Close file method?", options: ["close()", "end()", "quit()", "stop()"], ans: 0, exp: "f.close()." },
+            { id: 53, category: "files", q: "Auto close syntax?", options: ["try", "with open", "auto", "loop"], ans: 1, exp: "Context manager 'with'." },
+            { id: 54, category: "files", q: "Delete file?", options: ["remove()", "os.remove()", "del", "delete()"], ans: 1, exp: "os.remove() from os module." },
+
+            // --- Advanced ---
+            { id: 55, category: "loops", q: "Infinite loop?", options: ["Never ends", "Range(0)", "With break", "Fast"], ans: 0, exp: "Loop with no False condition." },
+            { id: 56, category: "variables", q: "'None' is?", options: ["0", "Empty Str", "Null object", "Undefined"], ans: 2, exp: "Represents null value." },
+            { id: 57, category: "control", q: "'pass' does?", options: ["Skip", "Nothing", "Return", "Error"], ans: 1, exp: "Placeholder, no operation." },
+            { id: 58, category: "operators", q: "Not Equal?", options: ["<>", "!=", "==", "!=="], ans: 1, exp: "!= operator." },
+            { id: 59, category: "datastructures", q: "Copy list 'a'?", options: ["b=a", "b=a.copy()", "b=copy(a)", "b<-a"], ans: 1, exp: "b=a is ref, copy() is new." },
+            { id: 60, category: "history", q: "Source compiled to?", options: ["Binary", "Machine", "Bytecode", "Assembly"], ans: 2, exp: ".pyc bytecode." }
+        ];
+
+        // --- Init Quiz Render ---
+        const quizContainer = document.getElementById('quiz-container');
+        const filterSelect = document.getElementById('topic-filter');
+        const scoreDisplay = document.getElementById('score');
+        const progressBar = document.getElementById('progress-bar');
+
+        renderQuestions('all');
+
+        filterSelect.addEventListener('change', (e) => {
+            renderQuestions(e.target.value);
+        });
+
+        function renderQuestions(category) {
+            quizContainer.innerHTML = '';
+            
+            const filtered = category === 'all' 
+                ? allQuestions 
+                : allQuestions.filter(q => q.category === category);
+
+            if(filtered.length === 0) {
+                quizContainer.innerHTML = `<div class="text-center text-slate-500">No questions in this topic.</div>`;
+                return;
+            }
+
+            filtered.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-800 rounded-xl shadow-md p-5 border border-slate-700 border-t-4 border-t-orange-500 fade-in";
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-slate-900 text-orange-400 border border-slate-600 text-[10px] font-bold px-2 py-1 rounded uppercase">${q.category}</span>
+                        <span class="text-slate-500 text-xs font-mono">Q${q.id}</span>
+                    </div>
+                    <h3 class="text-md font-semibold text-slate-100 mb-4">${q.q}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2" id="options-${q.id}">
+                        ${q.options.map((opt, i) => `
+                            <button onclick="handleAnswer(${q.id}, ${i}, this)" 
+                                class="option-btn w-full text-left px-3 py-2 rounded-lg border border-slate-600 bg-slate-700/50 text-sm font-medium text-slate-300 focus:outline-none">
+                                <span class="mr-2 opacity-50 font-bold text-xs">${String.fromCharCode(65 + i)}.</span> ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="exp-${q.id}" class="hidden mt-3 bg-green-900/20 border-l-2 border-green-500 p-3 rounded text-xs text-slate-300">
+                        <span class="font-bold block mb-1 status-text"></span> ${q.exp}
+                    </div>
+                `;
+                quizContainer.appendChild(card);
+            });
+        }
+
+        function handleAnswer(qId, selectedIndex, btnElement) {
+            const question = allQuestions.find(q => q.id === qId);
+            const parent = document.getElementById(`options-${qId}`);
+            const buttons = parent.getElementsByTagName('button');
+            const expBox = document.getElementById(`exp-${qId}`);
+            const statusText = expBox.querySelector('.status-text');
+
+            for(let btn of buttons) {
+                btn.disabled = true;
+                btn.classList.add('cursor-not-allowed', 'opacity-50');
+            }
+
+            const isCorrect = selectedIndex === question.ans;
+            
+            if (isCorrect) {
+                btnElement.classList.replace('bg-slate-700/50', 'bg-green-900/50');
+                btnElement.classList.replace('border-slate-600', 'border-green-500');
+                btnElement.classList.add('text-green-300');
+                statusText.innerHTML = "Correct!";
+                statusText.className = "font-bold block mb-1 text-green-400";
+                currentScore++;
+            } else {
+                btnElement.classList.replace('bg-slate-700/50', 'bg-red-900/50');
+                btnElement.classList.replace('border-slate-600', 'border-red-500');
+                btnElement.classList.add('text-red-300');
+                
+                // Show Correct
+                buttons[question.ans].classList.replace('bg-slate-700/50', 'bg-green-900/50');
+                buttons[question.ans].classList.replace('border-slate-600', 'border-green-500');
+                buttons[question.ans].classList.add('text-green-300');
+
+                statusText.innerHTML = "Incorrect.";
+                statusText.className = "font-bold block mb-1 text-red-400";
+                expBox.classList.replace('bg-green-900/20', 'bg-red-900/20');
+                expBox.classList.replace('border-green-500', 'border-red-500');
+            }
+
+            expBox.classList.remove('hidden');
+            answeredCount++;
+            updateStats();
+        }
+
+        function updateStats() {
+            scoreDisplay.innerText = currentScore;
+            const progressPercent = (answeredCount / allQuestions.length) * 100;
+            progressBar.style.width = `${Math.min(progressPercent, 100)}%`;
+        }
+
+        // --- 5. FIREBASE SUBMIT & LISTEN ---
+        
+        async function submitScoreToFirebase() {
+            const btn = document.getElementById('submit-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+            btn.disabled = true;
+
+            try {
+                // Use Roll Number as Document ID to update existing score if re-submitting
+                await db.collection(COLLECTION_NAME).doc(currentUser.roll).set({
+                    name: currentUser.name,
+                    roll: currentUser.roll,
+                    score: currentScore,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i> Score Saved!';
+                btn.classList.replace('bg-green-600', 'bg-slate-700');
+            } catch (error) {
+                console.error("Error writing document: ", error);
+                btn.innerHTML = 'Error Saving';
+                alert("Error saving score. Check console.");
+            }
+        }
+
+        function listenToLeaderboard() {
+            const listContainer = document.getElementById('leaderboard-list');
+            
+            // Listen for updates sorted by Score Descending
+            db.collection(COLLECTION_NAME)
+                .orderBy("score", "desc")
+                .limit(50)
+                .onSnapshot((querySnapshot) => {
+                    listContainer.innerHTML = ""; // Clear list
+                    
+                    let rank = 1;
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        
+                        // Create List Item
+                        const item = document.createElement('div');
+                        item.className = "flex items-center gap-3 p-3 mb-2 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-slate-500 transition";
+                        
+                        // Rank Color Logic
+                        let rankColor = "text-slate-400";
+                        let icon = `#${rank}`;
+                        if(rank === 1) { rankColor = "text-yellow-400"; icon = '<i class="fas fa-crown"></i>'; }
+                        if(rank === 2) { rankColor = "text-gray-300"; }
+                        if(rank === 3) { rankColor = "text-orange-400"; }
+
+                        // Highlight Current User
+                        if(data.roll === currentUser.roll) {
+                            item.classList.add('ring-1', 'ring-orange-500');
+                        }
+
+                        // Progress Bar Width relative to 60
+                        const widthPct = (data.score / 60) * 100;
+
+                        item.innerHTML = `
+                            <div class="font-bold ${rankColor} w-6 text-center text-sm">${icon}</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="font-semibold text-slate-200 truncate">${data.name}</span>
+                                    <span class="text-slate-500 text-[10px]">${data.roll}</span>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-gradient-to-r from-orange-500 to-green-500 h-1.5 rounded-full" style="width: ${widthPct}%"></div>
+                                </div>
+                            </div>
+                            <div class="font-bold text-green-400 text-sm w-8 text-right">${data.score}</div>
+                        `;
+                        listContainer.appendChild(item);
+                        rank++;
+                    });
+
+                    if(querySnapshot.empty) {
+                        listContainer.innerHTML = `<div class="text-center py-4 text-slate-500 text-xs">No scores yet. Be the first!</div>`;
+                    }
+                });
+        }
     </script>
 </body>
 </html>
